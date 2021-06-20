@@ -28,8 +28,31 @@ export default class BookDonateScreen extends React.Component {
     this.getRequestedBookList();
   }
   keyExtractor = (item, index) => index.toString();
+
   renderItem = ({ item, i }) => {
     return (
+      // <ListItem
+      //   key={i}
+      //   title={item.book_name}
+      //   Subtitle={item.book_description}
+      //   titleStyle={{
+      //     color: "black",
+      //     fontWeight: "bold",
+      //   }}
+      //   rightElement={
+      //     <TouchableOpacity
+      //       style={styles.button}
+      //       onPress={() => {
+      //         this.props.navigation.navigate("RecieverDetailScreen", {
+      //           details: item,
+      //         });
+      //       }}
+      //     >
+      //       <Text style={{ color: "#fffff" }}>View</Text>
+      //     </TouchableOpacity>
+      //   }
+      //   bottomDivider
+      // />
       <ListItem key={i} bottomDivider>
         <ListItem.Content>
           <ListItem.Title>{item.book_name}</ListItem.Title>
@@ -80,4 +103,5 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: "white",
   },
+  button: {},
 });

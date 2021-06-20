@@ -70,10 +70,11 @@ export default class CustomSidebarMenu extends React.Component {
             showEditButton
           />
         </View>
-        <View style={{ flex: 0.8, marginTop: -435 }}>
+        <View style={{ flex: 0.8, marginTop: -235 }}>
           <DrawerItems {...this.props} />
         </View>
         <TouchableOpacity
+          style={{ marginBottom: 300 }}
           onPress={() => {
             this.props.navigation.navigate("WelcomeScreen");
             firebase.auth().signOut();

@@ -1,12 +1,22 @@
-import * as React from "react";
-import { createAppContainer } from "react-navigation";
+import React from "react";
+// import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import BookDonateScreen from "../screens/BookDonateScreen";
 import RecieverDetailScreen from "../screens/RecieverDetailScreen";
-export const AppStackNavigator = createAppContainer(
+export const AppStackNavigator = createStackNavigator(
   {
-    bookDonateList: { screen: BookDonateScreen },
-    recieverDetails: { screen: RecieverDetailScreen },
+    BookDonateList: {
+      screen: BookDonateScreen,
+      // navigationOptions: {
+      //   headerShown: false,
+      // },
+    },
+    RecieverDetails: {
+      screen: RecieverDetailScreen,
+      // navigationOptions: {
+      //   headerShown: false,
+      // },
+    },
   },
-  { initialRouteName: "bookDonateList" }
+  { initialRouteName: "BookDonateList" }
 );

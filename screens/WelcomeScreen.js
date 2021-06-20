@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Component,
   View,
   TouchableOpacity,
   Text,
@@ -31,7 +30,7 @@ export default class WelcomeScreen extends React.Component {
       .auth()
       .signInWithEmailAndPassword(emailId, password)
       .then(() => {
-        this.props.navigation.navigate("BookDonate");
+        this.props.navigation.navigate("BookDonateList");
       })
       .catch((error) => {
         var errorMessage = error.message;
