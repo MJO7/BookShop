@@ -7,15 +7,15 @@ export const AppStackNavigator = createStackNavigator(
   {
     BookDonateList: {
       screen: BookDonateScreen,
-      // navigationOptions: {
-      //   headerShown: false,
-      // },
+      navigationOptions: {
+        headerShown: false,
+      },
     },
     RecieverDetails: {
       screen: RecieverDetailScreen,
-      // navigationOptions: {
-      //   headerShown: false,
-      // },
+      navigationOptions: {
+        headerShown: false,
+      },
     },
   },
   { initialRouteName: "BookDonateList" }

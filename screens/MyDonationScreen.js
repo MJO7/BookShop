@@ -4,26 +4,85 @@ import firebase from "firebase";
 import db from "../config";
 import MyHeader from "../components/MyHeader";
 export default class MyDonationScreen extends Component {
-  static navigationOptions = { header: null };
+  
   constructor() {
     super();
     this.state = {
-      userId: firebase.auth().currentUser.email,
+      donorId: firebase.auth().currentUser.email,
+      donorName:'',
       allDonations: [],
     };
     this.requestRef = null;
+  }
+  static navigationOptions = { header: null };
+  getDonorDetails=(donorId)=>{
+    db.collection('users').where('email_id' , '==' , donorId).
+    get()
+    .then((snapshot)=> {
+      snapshot.forEach((doc)=>{
+        this.setState({
+          "donorName" : doc.data().first_name+""+doc.data().last_name
+          
+        })
+      })
+    })
   }
   getAllDonations = () => {
     this.requestRef = db
       .collection("all_donations")
       .where("donor_id", "==", this.state.userId)
       .onSnapshot((snapshot) => {
-        var allDonations = snapshot.docs.map((document) => document.data());
+        var allDonations = []
+        snapshot.docs.map((doc) =>{
+          var donation= doc.data();
+          donation["doc_id"]=doc.id
+          allDonations.push(donation)
+        })
         this.setState({
           allDonations: allDonations,
         });
       });
   };
+  sendBook=(bookDetails)=>{
+    if(bookDetails.request_status==="Book Sent"){
+      var requestStatus="Donor Interested"
+      db.collection('all_donations').doc(bookDetails.doc_id).update({
+        "request_status":"Donor Interested"
+      })
+      this.sendNotification(bookDetails , requestStatus)
+    }
+    else{
+      var requestStatus="Book Sent"
+      db.collection('all_donations').doc(bookDetails.doc_id).update({
+        "request_status":"Book Sent"
+      })
+      this.sendNotification(bookDetails , requestStatus)
+    }
+  }
+  sendNotification=(bookDetails , requestStatus)=>{
+    var requestId = bookDetails.request_id
+    var donorId = bookDetails.donor_id
+    db.collection('all_notifications').where("request_id" , "==" , this.state.requestId)
+    .where("donor_id" , "==" , this.state.donorId)
+    .get()
+    .then((snapshot)=>{
+      snapshot.forEach((doc)=>{
+        var message = "" 
+        if(requestStatus==="Book Sent"){
+          message = this.state.donorName+"Sent you the book."              
+        }
+        else{
+          message = this.state.donorName+"Has shown interest in donating the book."          
+        }
+        db.collection('all_notifications').doc(doc.id).update({
+          "message":message , 
+          "notification_status":"unread" , 
+          "date":firebase.firestore.FieldValue.serverTimestamp()
+        })
+      })
+    })
+
+  }
   keyExtractor = (item, index) => index.toString();
   renderItem = ({ item, i }) => (
     <ListItem
@@ -35,15 +94,26 @@ export default class MyDonationScreen extends Component {
       leftElement={<Icon name="book" type="font-awesome" color="white" />}
       titleStyle={{ color: "black", fontWeight: "bold" }}
       rightElement={
-        <TouchableOpacity style={styles.button}>
-          <Text style={{ color: "white" }}>Send Book</Text>
+        <TouchableOpacity style={[styles.button ,
+         {
+           backgroundColor:item.request_status==="Book Sent"?"green":"#ff5722"
+         } 
+         ]} 
+         onPress={()=>{
+           this.sendBook(item)
+         }}>
+          <Text style={{ color: "white" }}>{item.request_status==="Book Sent"?"Book Sent":"Send Book"}</Text>
         </TouchableOpacity>
       }
       bottomDivider
     />
   );
   componentDidMount() {
+    this.getDonorDetails(this.state.donorId)
     this.getAllDonations();
+  }
+  componentWillUnmount(){
+    this.requestRef()
   }
   render() {
     return (

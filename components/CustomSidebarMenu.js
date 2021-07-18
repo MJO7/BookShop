@@ -4,8 +4,10 @@ import { DrawerItems } from "react-navigation-drawer";
 import firebase from "firebase";
 import { Avatar } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
+import { Icon } from "react-native-elements";
 import db from "../config";
 import * as Permissions from "expo-permissions";
+import { RFValue } from "react-native-responsive-fontsize";
 export default class CustomSidebarMenu extends React.Component {
   constructor() {
     super();
@@ -59,7 +61,14 @@ export default class CustomSidebarMenu extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, marginTop: 30 }}>
-        <View style={{ flex: 0.5, alignItems: "center" }}>
+        <View
+          style={{
+            flex: 0.5,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#15415B",
+          }}
+        >
           <Avatar
             rounded
             source={{ uri: this.state.image }}
@@ -70,7 +79,7 @@ export default class CustomSidebarMenu extends React.Component {
             showEditButton
           />
         </View>
-        <View style={{ flex: 0.8, marginTop: -235 }}>
+        <View style={{ flex: 0.8, marginTop: 35 }}>
           <DrawerItems {...this.props} />
         </View>
         <TouchableOpacity
@@ -80,7 +89,22 @@ export default class CustomSidebarMenu extends React.Component {
             firebase.auth().signOut();
           }}
         >
-          <Text>LOGOUT</Text>
+          <Icon
+            name="logout"
+            type="antdesign"
+            size={RFValue(20)}
+            iconStyle={{ paddingLeft: RFValue(10) }}
+          />
+
+          <Text
+            style={{
+              fontSize: RFValue(15),
+              fontWeight: "bold",
+              marginLeft: RFValue(30),
+            }}
+          >
+            LOGOUT
+          </Text>
         </TouchableOpacity>
       </View>
     );

@@ -21,7 +21,7 @@ export default class SettingScreen extends React.Component {
       docId: "",
     };
   }
-  updateDetals = () => {
+  updateDetails = () => {
     db.collection("users").doc(this.state.docId).update({
       first_name: this.state.firstName,
       last_name: this.state.lastName,

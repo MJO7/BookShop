@@ -4,28 +4,37 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Image,
   FlatList,
 } from "react-native";
 import MyHeader from "../components/MyHeader";
 import { ListItem } from "react-native-elements";
+import firebase from "firebase";
 import db from "../config";
 export default class BookDonateScreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      userId: firebase.auth().currentUser.email,
       requestedBookList: [],
     };
+    this.requestRef = null;
   }
   getRequestedBookList = () => {
-    db.collection("requested_books").onSnapshot((snapshot) => {
-      var requestedBookList = snapshot.docs.map((document) => document.data());
-      this.setState({
-        requestedBookList: requestedBookList,
+    this.requestRef = db
+      .collection("requested_books")
+      .onSnapshot((snapshot) => {
+        var requestedBookList = snapshot.docs.map((doc) => doc.data());
+        this.setState({
+          requestedBookList: requestedBookList,
+        });
       });
-    });
   };
   componentDidMount() {
     this.getRequestedBookList();
+  }
+  componentWillUnmount() {
+    this.requestRef();
   }
   keyExtractor = (item, index) => index.toString();
 
@@ -39,16 +48,52 @@ export default class BookDonateScreen extends React.Component {
       //     color: "black",
       //     fontWeight: "bold",
       //   }}
+      //   leftElement={
+      //     <Image
+      //       style={{ height: 50, width: 50 }}
+      //       source={{
+      //         uri: item.image_link,
+      //       }}
+      //     />
+      //   }
       //   rightElement={
       //     <TouchableOpacity
       //       style={styles.button}
       //       onPress={() => {
       //         this.props.navigation.navigate("RecieverDetailScreen", {
+      //           "details": item,
+      //         });
+      //       }}
+      //     >
+      //       <Text style={{ color: "blue" }}>View</Text>
+      //     </TouchableOpacity>
+      //   }
+      //   bottomDivider
+      // />
+
+      // <ListItem
+      //   key={i}
+      //   title={item.book_name}
+      //   subtitle={item.reason_to_request}
+      //   titleStyle={{ color: "black", fontWeight: "bold" }}
+      //   leftElement={
+      //     <Image
+      //       style={{ height: 50, width: 50 }}
+      //       source={{
+      //         uri: item.image_link,
+      //       }}
+      //     />
+      //   }
+      //   rightElement={
+      //     <TouchableOpacity
+      //       style={styles.button}
+      //       onPress={() => {
+      //         this.props.navigation.navigate("RecieverDetails", {
       //           details: item,
       //         });
       //       }}
       //     >
-      //       <Text style={{ color: "#fffff" }}>View</Text>
+      //       <Text style={{ color: "#ffff" }}>View</Text>
       //     </TouchableOpacity>
       //   }
       //   bottomDivider
@@ -57,7 +102,25 @@ export default class BookDonateScreen extends React.Component {
         <ListItem.Content>
           <ListItem.Title>{item.book_name}</ListItem.Title>
           <ListItem.Subtitle>{item.book_description}</ListItem.Subtitle>
+          <ListItem.Subtitle>
+            <Image
+              style={{ height: 90, width: 90 }}
+              source={{
+                uri: item.image_link,
+              }}
+            />
+          </ListItem.Subtitle>
         </ListItem.Content>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            this.props.navigation.navigate("RecieverDetailScreen", {
+              details: item,
+            });
+          }}
+        >
+          <Text>View</Text>
+        </TouchableOpacity>
         <ListItem.Chevron
           onPress={() => {
             this.props.navigation.navigate("recieverDetailScreen");
@@ -69,11 +132,17 @@ export default class BookDonateScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: "#15415B", height: 1000 }}>
-        <MyHeader title="Donate Book" />
+        <MyHeader title="Donate Book" navigation={this.props.navigation} />
         <View style={{ flex: 1 }}>
           {this.state.requestedBookList.length === 0 ? (
-            <View style={{ flex: 1 }}>
-              <Text>No Requested Books</Text>
+            <View style={styles.subContainer}>
+              <Text
+                style={{
+                  fontSize: 25,
+                }}
+              >
+                List of all requested books
+              </Text>
             </View>
           ) : (
             <FlatList
@@ -89,19 +158,22 @@ export default class BookDonateScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  inputBox2: {
-    borderWidth: 1,
-    alignSelf: "center",
-    borderColor: "#475980",
-    height: 60,
-    alignItems: "center",
+  button: {
+    width: 100,
+    height: 30,
     justifyContent: "center",
-    width: 320,
-    borderRadius: 15,
-    marginTop: 10,
-    backgroundColor: "#475980",
-    fontSize: 22,
-    color: "white",
+    alignItems: "center",
+    backgroundColor: "#ff5722",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
   },
-  button: {},
+  subContainer: {
+    flex: 1,
+    fontSize: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
