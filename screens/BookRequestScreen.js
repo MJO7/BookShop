@@ -29,6 +29,8 @@ export default class BookRequestScreen extends React.Component {
       requestId: "",
       userDocId: "",
       docId: "",
+      bookPrice:"",
+      currencyCode:"",
       Imagelink: "#",
       dataSource: "",
       requestedImageLink: "",
@@ -39,7 +41,7 @@ export default class BookRequestScreen extends React.Component {
     return Math.random().toString(36).substring(7);
   }
 
-  addRequest = async (bookName, description) => {
+  addRequest = async (bookName, description , bookPrice , currencyCode) => {
     var userId = this.state.userId;
     var randomRequestId = this.createUniqueId();
     var books = await BookSearch.searchbook(
@@ -54,6 +56,8 @@ export default class BookRequestScreen extends React.Component {
       "book_status": "requested",
       "date": firebase.firestore.FieldValue.serverTimestamp(),
       "image_link": books.data[0].volumeInfo.imageLinks.smallThumbnail,
+      "bookPrice":bookPrice,
+      "currencyCode": currencyCode,
     });
     await this.getBookRequest();
     db.collection("users")
@@ -70,6 +74,8 @@ export default class BookRequestScreen extends React.Component {
     this.setState({
       bookName: "",
       description: "",
+      bookPrice:'',
+      currencyCode:'',
       requestId: randomRequestId,
     });
     return Alert.alert("Book Requested Successfully");
@@ -184,12 +190,13 @@ export default class BookRequestScreen extends React.Component {
       <TouchableHighlight
         style={{
           alignItems: "center",
-          backgroundColor: "blue",
+          backgroundColor: "#475980",
           padding: 10,
+          marginLeft:30,
           width: "90%",
         }}
         activeOpacity={0.6}
-        underlayColor="blue"
+        underlayColor="#475980"
         onPress={() => {
           this.setState({
             showFlatlist: false,
@@ -290,12 +297,34 @@ export default class BookRequestScreen extends React.Component {
                   }}
                   value={this.state.reasonToRequest}
                 />
+                <TextInput 
+                style={[styles.formTextInput]}
+                placeholder={"What is the price of the Book"}
+                onChangeText={(text) => {
+                  this.setState({
+                    bookPrice: text,
+                  });
+                }}
+                value={this.state.bookPrice}
+                />
+                <TextInput 
+                style={[styles.formTextInput]}
+                placeholder={"What is your currency"}
+                onChangeText={(text) => {
+                  this.setState({
+                    currencyCode: text,
+                  });
+                }}
+                value={this.state.currencyCode}
+                />
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
                     this.addRequest(
                       this.state.bookName,
-                      this.state.reasonToRequest
+                      this.state.reasonToRequest,
+                      this.state.bookPrice,
+                      this.state.currencyCode,
                     );
                   }}
                 >

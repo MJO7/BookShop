@@ -22,6 +22,7 @@ export default class WelcomeScreen extends React.Component {
       address: "",
       isModalVisible: false,
       contact: "",
+      currencyCode:'',
       confirmPassword: "",
     };
   }
@@ -136,6 +137,17 @@ export default class WelcomeScreen extends React.Component {
               this.setState({ confirmPassword: text });
             }}
           />
+           {/* <TextInput 
+        style={[styles.inputBox2 , {marginTop:20}]}
+        placeholder={"Country currency code"}
+        maxLength={8}
+        placeholderTextColor="grey"
+        onChangeText={(text)=>{
+          this.setState({
+            currencyCode:text
+          })
+        }}
+        /> */}
           <TouchableOpacity
             style={styles.loginButton}
             onPress={() => {
@@ -155,6 +167,7 @@ export default class WelcomeScreen extends React.Component {
                 fontWeight: "bold",
                 color: "white",
                 fontSize: 15,
+                
               }}
               onPress={() => {
                 this.setState({ isModalVisible: false });
@@ -204,6 +217,7 @@ export default class WelcomeScreen extends React.Component {
             this.setState({ password: text });
           }}
         />
+       
         <TouchableOpacity style={styles.text}>
           <Text
             style={{
@@ -240,6 +254,7 @@ export default class WelcomeScreen extends React.Component {
             Sign Up
           </Text>
         </TouchableOpacity>
+       
       </View>
     );
   }
@@ -329,4 +344,7 @@ const styles = StyleSheet.create({
     marginBottom: 80,
     backgroundColor: "#15415B",
   },
+  textInput:{
+    
+  }
 });

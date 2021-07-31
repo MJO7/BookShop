@@ -100,11 +100,20 @@ export default class BookDonateScreen extends React.Component {
       // />
       <ListItem key={i} bottomDivider>
         <ListItem.Content>
-          <ListItem.Title>{item.book_name}</ListItem.Title>
-          <ListItem.Subtitle>{item.book_description}</ListItem.Subtitle>
+          <ListItem.Title style={{fontWeight:'bold' , fontSize:20}}>{item.book_name}</ListItem.Title>
+          <ListItem.Subtitle style={{
+            marginLeft:120 ,
+            fontSize:15,
+            fontWeight:'bold'
+            }}>{item.book_description}</ListItem.Subtitle>
+             <ListItem.Subtitle style={{
+            marginLeft:120 ,
+            fontSize:15,
+            fontWeight:'bold'
+            }}>{item.bookPrice}</ListItem.Subtitle>
           <ListItem.Subtitle>
             <Image
-              style={{ height: 90, width: 90 }}
+              style={{ height: 100, width: 100, }}
               source={{
                 uri: item.image_link,
               }}

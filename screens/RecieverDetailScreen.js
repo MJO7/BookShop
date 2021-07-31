@@ -18,10 +18,13 @@ export default class RecieverDetailScreen extends Component {
       bookImage: "#",
       description:
         this.props.navigation.getParam("details")["book_description"],
+      bookPrice:this.props.navigation.getParam("details")["bookPrice"],
+      currencyCode:this.props.navigation.getParam("details")["currencyCode"],
       recieverName: "",
       recieverContact: "",
       reciverAddress: "",
       recieverRequestDocId: "",
+      convertedCurrency:"",
     };
   }
   getRecieverDetails() {
@@ -89,7 +92,25 @@ export default class RecieverDetailScreen extends Component {
     this.getRecieverDetails();
     this.getUserDetails(this.state.userId);
   }
+  getData(){
+  //  var bookPrice = this.state.bookPrice
+  //  var value = this.state.bookPrice/74.38
+   this.setState({
+     convertedCurrency:this.state.bookPrice/75
+   })
+  }
 
+  // getData(){
+  //   fetch("http://data.fixer.io/api/latest?access_key=174dfb28f712d766970ba3c989fedd8e")
+  //   .then(respone=>{
+  //     return Response.json();
+  //   }).then(responseData=>{
+  //     var currencyCode = this.state.currencyCode
+  //     var currency= responseData.rates.INR
+  //     var value = 75/currency
+  //     console.log(value)
+  //   })
+  // }
   render() {
     return (
       <View
@@ -149,22 +170,47 @@ export default class RecieverDetailScreen extends Component {
               <Text
                 style={{
                   fontWeight: "500",
-                  fontSize: RFValue(25),
+                  fontSize: RFValue(28),
+                  marginLeft:-10,
                   textAlign: "center",
                 }}
               >
                 {this.state.bookName}
+              </Text>
+             
+              <Text
+                style={{
+                  fontWeight: "400",
+                  fontSize: RFValue(15),
+                  textAlign: "center",
+                  marginLeft:-60,
+                  marginTop: RFValue(15),
+                }}
+              >
+                {this.state.description}
               </Text>
               <Text
                 style={{
                   fontWeight: "400",
                   fontSize: RFValue(15),
                   textAlign: "center",
+                  marginLeft:-60,
                   marginTop: RFValue(15),
                 }}
               >
-                {this.state.description}
+                {this.state.bookPrice} {this.state.currencyCode} =  {this.state.convertedCurrency} $
               </Text>
+              {/* <Text
+                style={{
+                  
+                  fontSize: 25,
+                  marginLeft:-10,
+                  textAlign: "center",
+                }}
+              >
+                {this.state.convertedCurrency} $
+              </Text> */}
+            
             </View>
           </View>
           <View style={{ flex: 0.7, padding: RFValue(20) }}>
@@ -175,11 +221,11 @@ export default class RecieverDetailScreen extends Component {
                 justifyContent: "center",
                 marginTop: RFValue(50),
                 borderWidth: 1,
-                borderColor: "blue",
+                backgroundColor: "#15415B",
                 padding: RFValue(10),
               }}
             >
-              <Text style={{ fontWeight: "500", fontSize: RFValue(30) }}>
+              <Text style={{ fontWeight: "500", fontSize: RFValue(30) , color:'#EA595D'}}>
                 Reciever Information
               </Text>
               <Text
@@ -187,6 +233,7 @@ export default class RecieverDetailScreen extends Component {
                   fontWeight: "400",
                   fontSize: RFValue(20),
                   marginTop: RFValue(30),
+                  color:'#EA595D'
                 }}
               >
                 Name:{this.state.recieverName}
@@ -196,6 +243,7 @@ export default class RecieverDetailScreen extends Component {
                   fontWeight: "400",
                   fontSize: RFValue(20),
                   marginTop: RFValue(30),
+                  color:'#EA595D'
                 }}
               >
                 Contact:{this.state.recieverContact}
@@ -205,6 +253,7 @@ export default class RecieverDetailScreen extends Component {
                   fontWeight: "400",
                   fontSize: RFValue(20),
                   marginTop: RFValue(30),
+                  color:'#EA595D'
                 }}
               >
                 Address:{this.state.reciverAddress}
@@ -218,6 +267,16 @@ export default class RecieverDetailScreen extends Component {
                 justifyContent: "center",
               }}
             >
+               <TouchableOpacity style={styles.inputBox2}>
+               <Text style={{ 
+                  fontSize: RFValue(17),
+                
+                  color:'#EA595D'}}
+                  onPress={() => {
+               this.getData()
+                  }}
+                  >Change currency to your rate</Text>
+             </TouchableOpacity>
               {this.state.recieverId !== this.state.userId ? (
                 <TouchableOpacity
                   style={styles.button}
@@ -260,5 +319,19 @@ const styles = StyleSheet.create({
       height: 8,
     },
     elevation: 16,
+  },
+  inputBox2: {
+    borderWidth: 1,
+    alignSelf: "center",
+    borderColor: "#475980",
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 320,
+    borderRadius: 15,
+    marginTop: 10,
+    backgroundColor: "#15415B",
+    fontSize: 22,
+    color: "white",
   },
 });
